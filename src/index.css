@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", serif;
+  --font-serif: "Playfair Display", serif;
+  
+  --color-primary-green: #01913F;
+  --color-accent-orange: #F47B20;
+  --color-accent-light: #F3AE5C;
+  --color-bg-page: #F9FAFB;
+}
+
+@layer base {
+  body {
+    @apply bg-bg-page text-slate-800 selection:bg-primary-green/20 selection:text-primary-green cursor-none;
+    font-family: var(--font-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-slate-900;
+  }
+}
+
+@layer utilities {
+  .bg-animated { 
+    background: linear-gradient(-45deg, #F9FAFB, #f3f5f7, #eef1f5, #F9FAFB); 
+    background-size: 400% 400%; 
+    animation: bg-gradient 15s ease infinite; 
+  }
+
+  @keyframes bg-gradient { 
+    0% { background-position: 0% 50%; } 
+    50% { background-position: 100% 50%; } 
+    100% { background-position: 0% 50%; } 
+  }
+
+  .float { animation: float 6s ease-in-out infinite; }
+  @keyframes float { 
+    0%, 100% { transform: translateY(0px); } 
+    50% { transform: translateY(-10px); } 
+  }
+}
+
+@utility glass { 
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-lg);
+}
+
+@layer utilities {
+  .marquee-h {
+    @apply flex whitespace-nowrap;
+    animation: marquee-h 40s linear infinite;
+  }
+  .marquee-h:hover {
+    animation-play-state: paused;
+  }
+  
+  @keyframes marquee-h {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .marquee-v {
+    @apply flex flex-col;
+    animation: marquee-v 30s linear infinite;
+  }
+  .marquee-v:hover {
+    animation-play-state: paused;
+  }
+  
+  @keyframes marquee-v {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+}
+
+/* Hide default cursor globally */
+* {
+  cursor: none !important;
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Glass effect for navbar */
+.glass-nav {
+  @apply glass border-b border-white/20;
+}
+
+/* Stacking card styles */
+.stacking-card {
+  @apply sticky top-24;
+}
