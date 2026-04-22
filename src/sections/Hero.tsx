@@ -1,147 +1,118 @@
 import { motion } from 'motion/react';
-import RevealText from '../components/RevealText';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Hero() {
+  const navigate = useNavigate();
+  const [displayText, setDisplayText] = useState('');
+  const fullText = "Transforming your future through recognized digital excellence.";
+  
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      setDisplayText(fullText.slice(0, index));
+      index++;
+      if (index > fullText.length) {
+        clearInterval(interval);
+      }
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <section className="relative min-h-screen pt-32 pb-20 px-6 overflow-hidden flex flex-col items-center justify-center">
+    <section className="relative h-[110vh] overflow-hidden flex flex-col items-center justify-center text-center px-6">
       {/* Background Image and Overlay */}
       <div className="absolute inset-0 -z-20">
         <img 
-          src="https://images.unsplash.com/photo-1541339907198-e08759df9a13?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
-          alt="University Background" 
+          src="https://images.unsplash.com/photo-152305085306e-88e4f6e0ad24?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
+          alt="Education background" 
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-primary-green/80 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-green/40 via-transparent to-bg-page" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/40 to-transparent" />
       </div>
 
-      {/* Background Gradients (Atmospheric) */}
-      <motion.div 
-        animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.1, 0.2, 0.1],
-          x: [0, 50, 0],
-          y: [0, -30, 0]
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -top-[20%] -right-[10%] w-[60%] aspect-square bg-gradient-to-br from-primary-green/20 to-accent-light/10 blur-[120px] rounded-full" 
-      />
-      <motion.div 
-        animate={{ 
-          scale: [1, 1.2, 1],
-          opacity: [0.1, 0.15, 0.1],
-          x: [0, -40, 0],
-          y: [0, 40, 0]
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute -bottom-[10%] -left-[10%] w-[50%] aspect-square bg-gradient-to-tr from-accent-orange/10 to-primary-green/5 blur-[100px] rounded-full" 
-      />
+      <div className="max-w-5xl mx-auto space-y-10">
+        {/* New Tag Badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest"
+        >
+          <span className="bg-indigo-500 text-white px-1.5 py-0.5 rounded text-[10px] mr-1">New</span>
+          FALL 2026 ADMISSIONS OPEN
+        </motion.div>
 
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-16 items-center">
-        <div className="lg:col-span-7 text-center lg:text-left space-y-8">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-green/5 border border-primary-green/20 text-primary-green text-sm font-semibold mb-2"
-          >
-            <span className="w-2 h-2 rounded-full bg-primary-green animate-pulse" />
-            Applications now open for Fall 2026
-          </motion.div>
+        {/* Serif Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-7xl md:text-8xl font-display leading-[1] text-white"
+        >
+          Advance Your Degree <br /> 
+          <span className="text-primary-green italic">Online & Effortless.</span>
+        </motion.h1>
 
-          <RevealText 
-            text="Advance Your Career with a Flexible Online Master’s Degree" 
-            className="text-6xl md:text-7xl font-display leading-[1.1] text-white"
-          />
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="text-lg text-white/80 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans"
-          >
-            Study from anywhere, attend live classes, access a rich virtual library, and graduate with a recognized certificate.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4"
-          >
-            <button className="bg-accent-orange text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl shadow-accent-orange/20 hover:scale-105 transition-transform flex items-center gap-2 group">
-              Start Enrollment
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="bg-white text-slate-700 border-2 border-slate-200 px-10 py-4 rounded-xl font-bold text-lg hover:border-primary-green transition-all flex items-center gap-2">
-              <Play size={20} className="fill-current" />
-              Explore Programs
-            </button>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            transition={{ delay: 1.5 }}
-            className="text-sm font-medium text-zinc-500 italic"
-          >
-            No relocation. No disruption. Just focused learning.
-          </motion.p>
+        {/* Typewriter Subheading */}
+        <div className="min-h-[1.5em] flex items-center justify-center">
+          <p className="text-xl md:text-2xl text-white/70 font-sans max-w-2xl">
+            {displayText}
+            <span className="inline-block w-0.5 h-6 bg-primary-green ml-1 animate-pulse" />
+          </p>
         </div>
 
-        <div className="relative">
-          <motion.div
-            initial={{ opacity: 0, x: 100, rotate: 5 }}
-            animate={{ opacity: 1, x: 0, rotate: 0 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="relative z-10"
-          >
-             {/* Main Hero Illustration Placeholder */}
-            <div className="relative w-full aspect-[4/5] max-w-[500px] mx-auto rounded-[40px] overflow-hidden shadow-2xl">
+        {/* Input Area with Multi-colored Glow */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="relative group max-w-2xl mx-auto"
+        >
+          {/* Multi-colored Glow Shadow */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary-green via-indigo-500 to-accent-orange rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200" />
+          
+          <div className="relative bg-white rounded-2xl flex items-center p-2 shadow-2xl">
+            <div className="pl-4 pr-2 text-slate-400">
+              <Search size={22} />
+            </div>
+            <input 
+              type="text" 
+              placeholder="Search for a Master's Program (e.g. Data Science)" 
+              className="flex-1 bg-transparent border-none outline-none text-slate-800 font-sans py-3 px-2 text-lg"
+            />
+            <button 
+              onClick={() => navigate('/enroll')}
+              className="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-green transition-colors flex items-center gap-2 group-hover:shadow-lg cursor-none"
+            >
+              Enroll Now
+              <ArrowRight size={18} />
+            </button>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="flex items-center justify-center gap-6 pt-6"
+        >
+          <div className="flex -space-x-3">
+            {[1, 2, 3, 4].map((i) => (
               <img 
-                src="https://picsum.photos/seed/edu/1000/1250" 
-                alt="Online Student" 
-                className="w-full h-full object-cover"
+                key={i} 
+                src={`https://i.pravatar.cc/100?img=${i+10}`} 
+                className="w-10 h-10 rounded-full border-2 border-slate-900" 
+                alt="Student"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              
-              {/* Floating Cards */}
-              <motion.div
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-10 -left-10 bg-white p-4 rounded-2xl shadow-xl border border-zinc-100 flex items-center gap-4"
-              >
-                <div className="w-12 h-12 bg-accent-orange/10 rounded-xl flex items-center justify-center text-accent-orange">
-                  <GraduationCap size={24} />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-zinc-400 uppercase">Recognized</div>
-                  <div className="font-display font-semibold">Global Certificate</div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, 15, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-20 -right-10 bg-white p-4 rounded-2xl shadow-xl border border-zinc-100 flex items-center gap-4"
-              >
-                <div className="w-12 h-12 bg-primary-green/10 rounded-xl flex items-center justify-center text-primary-green">
-                  <Play size={20} fill="currentColor" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-zinc-400 uppercase">Live Now</div>
-                  <div className="font-display font-semibold">Interactive Classes</div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Decorative Circles */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] aspect-square -z-10 border border-zinc-200 rounded-full opacity-20" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] aspect-square -z-10 border border-zinc-200 rounded-full opacity-10" />
-        </div>
+            ))}
+          </div>
+          <p className="text-sm text-white/50 font-sans">
+            <span className="text-white font-bold">1,200+</span> Students enrolled this month
+          </p>
+        </motion.div>
       </div>
     </section>
   );

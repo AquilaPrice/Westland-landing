@@ -1,89 +1,165 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
-import { CreditCard, BookOpen, GraduationCap, ChevronRight } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
 
 const steps = [
   {
-    title: "Enroll",
-    description: "Secure your admission with a simple and flexible payment process.",
-    icon: CreditCard,
-    color: "bg-primary-green",
+    id: 'enroll',
+    title: "Seamless Enrollment",
+    description: "Our digital-first application process is designed for modern students. No physical paperwork, no queues. Secure your spot in minutes through our encrypted gateway.",
+    visual: "code",
+    content: `// Westland University Enrollment API
+const application = await Westland.enroll({
+  program: "M.Sc. Data Science",
+  studentId: "WU-2026-X82",
+  paymentPlan: "Flexible",
+  status: "ENROLLED"
+});`
   },
   {
-    title: "Register Courses",
-    description: "Select your courses and build your semester plan with ease.",
-    icon: BookOpen,
-    color: "bg-accent-orange",
+    id: 'register',
+    title: "Smart Course Selection",
+    description: "Build your semester using our AI-driven curriculum builder. It analyzes your career goals to recommend the most impactful electives for your specific path.",
+    visual: "blueprint",
+    content: "M.Sc. Curriculum Architecture"
   },
   {
-    title: "Start Learning",
-    description: "Join live classes, access materials, and begin your academic journey.",
-    icon: GraduationCap,
-    color: "bg-accent-light",
+    id: 'learn',
+    title: "Global Classroom",
+    description: "Join live, interactive sessions with world-class faculty and peers from over 40 countries. Access our 24/7 virtual library and collaborative research labs from any device.",
+    visual: "code",
+    content: `class VirtualClassroom {
+  constructor(sessionId) {
+    this.session = LMS.connect(sessionId);
+    this.tools = ['Whiteboard', 'ScreenShare', 'AI-Tutor'];
+  }
+  
+  startLiveSession() {
+    this.session.broadcast("Welcome students!");
+  }
+}`
   },
 ];
 
 export default function HowItWorks() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
+  const [activeStep, setActiveStep] = useState(steps[0].id);
+  const stepRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  const x = useTransform(scrollYProgress, [0, 1], ["20%", "-20%"]);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveStep(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    steps.forEach((step) => {
+      if (stepRefs.current[step.id]) {
+        observer.observe(stepRefs.current[step.id]!);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section id="how-it-works" ref={containerRef} className="py-32 px-6 overflow-hidden bg-white/50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20 space-y-4">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-display font-bold text-slate-900"
-          >
-            Start Your Journey in <span className="text-primary-green italic">3 Simple Steps</span>
-          </motion.h2>
-          <motion.div 
-            initial={{ width: 0 }}
-            whileInView={{ width: 80 }}
-            viewport={{ once: true }}
-            className="h-1.5 bg-primary-green mx-auto rounded-full"
-          />
-        </div>
+    <section id="how-it-works" className="bg-[#f8f9fa] py-32 px-6">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-16">
+        
+        {/* Sticky Sidebar Navigation */}
+        <aside className="md:w-1/4 h-fit sticky top-32 space-y-8 hidden md:block">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">Process flow</p>
+            {steps.map((step) => (
+              <button
+                key={step.id}
+                onClick={() => stepRefs.current[step.id]?.scrollIntoView({ behavior: 'smooth' })}
+                className={`flex items-center gap-4 group w-full text-left py-3 transition-colors ${activeStep === step.id ? 'text-slate-900' : 'text-slate-400'}`}
+              >
+                <div className={`w-2 h-2 rounded-full transition-all ${activeStep === step.id ? 'bg-primary-green scale-125 shadow-[0_0_10px_rgba(1,145,63,0.5)]' : 'bg-slate-200 group-hover:bg-slate-300'}`} />
+                <span className="text-sm font-bold uppercase tracking-tighter">{step.title}</span>
+              </button>
+            ))}
+          </div>
+          
+          <div className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm space-y-4">
+            <p className="text-xs text-slate-500 leading-relaxed font-sans">Our streamlined process ensures you focus on what matters most: <span className="font-bold text-slate-900 italic">your education</span>.</p>
+            <div className="h-px bg-slate-100" />
+            <div className="flex -space-x-2">
+              {[1, 2, 3].map(i => <div key={i} className="w-6 h-6 rounded-full bg-slate-200 border-2 border-white" />)}
+              <div className="pl-4 text-[10px] font-bold text-slate-400 self-center">+4k enrolled</div>
+            </div>
+          </div>
+        </aside>
 
-        <motion.div style={{ x }} className="flex gap-8 min-w-max pb-10">
+        {/* Main Content Area */}
+        <div className="flex-1 space-y-32">
           {steps.map((step, index) => (
-            <motion.div
-              key={step.title}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -10 }}
-              className="relative glass p-10 rounded-[40px] text-center flex flex-col items-center w-[400px] shadow-2xl shadow-slate-200/50"
+            <div
+              key={step.id}
+              id={step.id}
+              ref={(el) => (stepRefs.current[step.id] = el)}
+              className={`flex flex-col md:flex-row gap-12 items-center ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
             >
-              <div className={`w-20 h-20 ${step.color} rounded-3xl flex items-center justify-center text-white mb-8 shadow-xl shadow-inherit/20`}>
-                <step.icon size={40} />
+              {/* Text Side */}
+              <div className="flex-1 space-y-6">
+                <div className="text-primary-green font-mono text-sm leading-none opacity-50">0{index + 1}</div>
+                <h3 className="text-4xl md:text-5xl font-display font-bold text-slate-900 leading-tight">{step.title}</h3>
+                <p className="text-lg text-slate-500 leading-relaxed font-sans">{step.description}</p>
+                <motion.div
+                  whileHover={{ x: 5 }}
+                  className="inline-flex items-center gap-2 text-slate-900 font-bold group cursor-pointer"
+                >
+                  <span className="border-b-2 border-slate-200 group-hover:border-primary-green transition-colors pb-1">Learn more about {step.id}</span>
+                </motion.div>
               </div>
-              <div className="absolute top-8 right-10 text-6xl font-display font-bold text-slate-100/50 -z-10">0{index + 1}</div>
-              <h3 className="text-3xl font-display font-bold mb-6 text-slate-900">{step.title}</h3>
-              <p className="text-slate-500 leading-relaxed font-sans text-lg">{step.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-16 text-center"
-        >
-          <button className="bg-primary-green text-white px-10 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform flex items-center gap-2 mx-auto group">
-            Begin Enrollment
-            <ChevronRight className="group-hover:translate-x-1 transition-transform" />
-          </button>
-        </motion.div>
+              {/* Visual Side */}
+              <div className="flex-1 w-full">
+                <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl bg-white border border-slate-100 group">
+                  {step.visual === 'code' ? (
+                    <div className="p-8 bg-slate-900 h-full font-mono text-sm overflow-hidden relative">
+                      <div className="flex gap-1.5 mb-6">
+                        <div className="w-2 h-2 rounded-full bg-red-500/30" />
+                        <div className="w-2 h-2 rounded-full bg-amber-500/30" />
+                        <div className="w-2 h-2 rounded-full bg-emerald-500/30" />
+                      </div>
+                      <pre className="text-indigo-300">
+                        <code>{step.content}</code>
+                      </pre>
+                      {/* Decorative SVG Overlay */}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20" viewBox="0 0 100 100">
+                        <path d="M0,0 L100,100 M100,0 L0,100" stroke="currentColor" fill="none" strokeWidth="0.1" />
+                      </svg>
+                    </div>
+                  ) : (
+                    <div className="h-full flex items-center justify-center bg-slate-50 relative overflow-hidden">
+                      {/* Blueprint Visual */}
+                      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                      <div className="relative z-10 text-center">
+                         <div className="w-48 h-48 border border-slate-200 rounded-full flex items-center justify-center animate-spin-slow">
+                            <div className="w-40 h-40 border border-dashed border-primary-green/30 rounded-full flex items-center justify-center">
+                               <div className="w-12 h-12 bg-primary-green rounded-xl" />
+                            </div>
+                         </div>
+                         <p className="mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{step.content}</p>
+                      </div>
+                      {/* Architectural Lines SVG Overlay */}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none stroke-slate-200/50" viewBox="0 0 400 400" fill="none">
+                         <path d="M0 200 H400 M200 0 V400" strokeWidth="1" />
+                         <circle cx="200" cy="200" r="100" strokeWidth="0.5" />
+                         <path d="M50 50 L350 350 M350 50 L50 350" strokeWidth="0.5" strokeDasharray="5,5" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
